@@ -1,56 +1,39 @@
+// File path: Assets/Scripts/CharacterMovement.cs
+
 using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    // Speed variable for movement
+    public float speed = 5.0f;
 
     void Update()
     {
-        // Move the character forward based on the direction it is facing
+        // Initialize movement direction
+        Vector3 movement = Vector3.zero;
+
+        // Check for arrow key inputs and set the movement direction
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            MoveForward();
+            movement += transform.forward;
         }
-        // Rotate the character to the left by 90 degrees and move in the new direction
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.DownArrow))
         {
-            RotateLeft();
+            movement -= transform.forward;
         }
-        // Rotate the character to the right by 90 degrees and move in the new direction
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
-            RotateRight();
+            movement -= transform.right;
         }
-        // Rotate the character by 180 degrees and move in the new direction
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.RightArrow))
         {
-            Rotate180();
+            movement += transform.right;
         }
 
-        // Continuously move the character forward based on the direction it is facing
-        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.DownArrow))
-        {
-            MoveForward();
-        }
-    }
+        // Normalize the movement direction and apply the speed
+        movement = movement.normalized * speed * Time.deltaTime;
 
-    void MoveForward()
-    {
-        transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
-    }
-
-    void RotateLeft()
-    {
-        transform.Rotate(0, -90f, 0);
-    }
-
-    void RotateRight()
-    {
-        transform.Rotate(0, 90f, 0);
-    }
-
-    void Rotate180()
-    {
-        transform.Rotate(0, 180f, 0);
+        // Move the character
+        transform.Translate(movement, Space.World);
     }
 }
